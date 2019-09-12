@@ -1,2 +1,0 @@
-/usr/bin/ar qc libutecdf.a  CMakeFiles/utecdf.dir/src/column/column.cpp.o CMakeFiles/utecdf.dir/src/column/column_factories.cpp.o CMakeFiles/utecdf.dir/src/table/table.cpp.o CMakeFiles/utecdf.dir/src/orderby/orderby.cpp.o
-/usr/bin/ranlib libutecdf.a

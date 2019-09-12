@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/utecdf_bin.dir/main.cpp.o  -o utecdf_bin  -L/home/aocsa/miniconda3/envs/blazingsql-env/lib -Wl,-rpath,/home/aocsa/miniconda3/envs/blazingsql-env/lib:/home/aocsa/miniconda3/lib libutecdf.a /home/aocsa/miniconda3/lib/libfmt.so.5.2.1 -Wl,--as-needed 

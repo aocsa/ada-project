@@ -71,7 +71,9 @@ function (blazingdb_artifact)
 
 
     if (GTEST_FOUND AND ARG_TESTS)
-        add_executable (${ARG_TARGET}-gtest EXCLUDE_FROM_ALL ${ARG_TESTS})
+       message (STATUS "Log: unit test ${ARG_TARGET}-gtest")
+
+        add_executable (${ARG_TARGET}-gtest ${ARG_TESTS})
         target_include_directories (${ARG_TARGET} PUBLIC src)
         target_compile_options (${ARG_TARGET} PUBLIC -ggdb -O0)
         target_link_libraries (${ARG_TARGET}-gtest ${ARG_TARGET}
@@ -80,6 +82,11 @@ function (blazingdb_artifact)
                 $ENV{CONDA_PREFIX}/lib/libgmock.a )
         add_custom_target (${ARG_TARGET}-gtest-run
                 COMMAND $<TARGET_FILE:${ARG_TARGET}-gtest>)
+
+        add_test(NAME ${ARG_TARGET}-gtest
+            COMMAND
+                ${CMAKE_BINARY_DIR}/${ARG_TARGET}-gtest
+        )
         add_dependencies (coverage ${ARG_TARGET}-gtest-run)
     endif ()
 
