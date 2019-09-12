@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblibutecdf.a  CMakeFiles/libutecdf.dir/src/column/column.cpp.o
+/usr/bin/ranlib liblibutecdf.a

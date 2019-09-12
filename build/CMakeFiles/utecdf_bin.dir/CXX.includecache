@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/aocsa/CLionProjects/utecdf_cpp/main.cpp
+iostream
+-
+fmt/core.h
+-
+
+/home/aocsa/miniconda3/include/fmt/core.h
+cassert
+-
+cstdio
+-
+cstring
+-
+iterator
+-
+string
+-
+type_traits
+-
+string_view
+-
+experimental/string_view
+-
+functional
+-
+fmt/core.h
+-
+
