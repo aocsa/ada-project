@@ -55,6 +55,7 @@ CMAKE_BINARY_DIR = /home/aocsa/CLionProjects/utecdf_cpp/build
 # The main recursive "all" target.
 all: CMakeFiles/utecdf_bin.dir/all
 all: CMakeFiles/utecdf.dir/all
+all: CMakeFiles/utecdf-gtest.dir/all
 
 .PHONY : all
 
