@@ -33,6 +33,9 @@ conda install -c hi2p-perim fmt
 Note for osx:
 ` brew install fmt`
 
+Not for windows users:
+`https://github.com/Microsoft/vcpkg`
+
 ## Final details
 
 Note: for users of visual studio code
