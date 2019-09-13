@@ -20,8 +20,9 @@ Note for osx:
 
 Note for user of visual studio code
 Edit "home_user" .vscode/c_cpp_properties.json
+```
 "/home/home_user/miniconda3/include/"
-
+```
 
 Build and RUN
 ```
