@@ -2,6 +2,8 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <unordered_map>
+
 
 // std::vector<int> two_sum(std::vector<int> & nums, int target) {
 //     std::sort(nums.begin(), nums.end());
@@ -20,15 +22,32 @@
 //     return std::vector<int>{};
 // }
 
+
+// std::vector<int> two_sum(std::vector<int> & nums, int target) {
+//     std::map<int, int> complements;
+//     for (int j = 0; j < nums.size(); j++) {
+//         complements[nums[j]] = j; 
+//     }
+//     for (int i = 0; i < nums.size(); i++) {
+//         auto c = target - nums[i];
+//         auto iter = complements.find(c); // log(n)
+//         if (iter != complements.end() && i != iter->second) {
+//             return std::vector<int>{i, iter->second};  
+//         }
+//     }
+//     return std::vector<int>{};
+// }
+
+
 std::vector<int> two_sum(std::vector<int> & nums, int target) {
-    std::map<int, int> complements;
+    std::unordered_map<int, int> complements;
     for (int j = 0; j < nums.size(); j++) {
         complements[nums[j]] = j; 
     }
     for (int i = 0; i < nums.size(); i++) {
         auto c = target - nums[i];
         auto iter = complements.find(c); // log(n)
-        if (i != iter->second && iter != complements.end()) {
+        if (iter != complements.end() && i != iter->second) {
             return std::vector<int>{i, iter->second};  
         }
     }
