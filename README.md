@@ -11,15 +11,15 @@ The basic requirements for this example is a anaconda enviroment:
 
 ## Installation on LINUX/UNIX Systems
 
-Install miniconda
+Download miniconda from
 
 https://docs.conda.io/en/latest/miniconda.html
 
+```
 chmod +x Miniconda3-latest-Linux-x86_64.sh
-
 bash Miniconda3-latest-Linux-x86_64.sh
-
 source activate base
+```
 
 ## Installation the following packages
 
