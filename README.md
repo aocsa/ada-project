@@ -15,8 +15,13 @@ conda install -c conda-forge gmock
 conda install -c hi2p-perim fmt
 ```
 
-Note of osx:
+Note for osx:
 * brew install fmt
+
+Note for user of visual studio code
+Edit "home_user" .vscode/c_cpp_properties.json
+"/home/home_user/miniconda3/include/"
+
 
 Build and RUN
 ```
