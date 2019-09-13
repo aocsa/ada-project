@@ -10,6 +10,7 @@ elseif (DEFINED ENV{CONDA_PREFIX})
     set(CMAKE_SYSTEM_PREFIX_PATH "$ENV{CONDA_PREFIX};${CMAKE_SYSTEM_PREFIX_PATH}")
     set(PREFIX $ENV{CONDA_PREFIX})
     message(STATUS "Conda environment detected, CMAKE_SYSTEM_PREFIX_PATH set to: ${CMAKE_SYSTEM_PREFIX_PATH}")
+    link_directories($ENV{CONDA_PREFIX}/lib)
 endif ()
 set(CMAKE_CXX_STANDARD 17)
 
@@ -19,16 +20,10 @@ include(CheckLibraryExists)
 include(CTest)
 
 find_package(Threads)
-find_package(GTest REQUIRED)
-find_package(fmt REQUIRED)
-
-if (GTEST_FOUND)
-    enable_testing ()
-    add_custom_target (coverage
-            COMMAND lcov -c -d ${CMAKE_BINARY_DIR}/src -o coverage.info
-            COMMAND lcov -r coverage.info '/usr*' '*boost*' '*build*' -o coverage.info
-            COMMAND genhtml coverage.info -o ${CMAKE_BINARY_DIR}/coverage-html)
-endif ()
+find_package(GTest CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+enable_testing ()
+ 
 
 function (blazingdb_artifact)
     set (OPTIONS OPTIONAL VIRTUAL)
@@ -68,8 +63,7 @@ function (blazingdb_artifact)
             LIBRARY DESTINATION lib
             ARCHIVE DESTINATION lib)
 
-
-    if (GTEST_FOUND AND ARG_TESTS)
+    if (ARG_TESTS)
        message (STATUS "Log: unit test ${ARG_TARGET}-gtest")
 
         add_executable (${ARG_TARGET}-gtest ${ARG_TESTS})
@@ -77,9 +71,9 @@ function (blazingdb_artifact)
         target_compile_options (${ARG_TARGET} PUBLIC -ggdb -O0)
         target_link_libraries (${ARG_TARGET}-gtest 
                 ${ARG_TARGET}
-                GTest::GTest
-                $ENV{CONDA_PREFIX}/lib/libgmock_main.a
-                $ENV{CONDA_PREFIX}/lib/libgmock.a )
+                GTest::gtest 
+                GTest::gtest_main 
+                GTest::gmock GTest::gmock_main)
 
         add_custom_target (${ARG_TARGET}-gtest-run
                 COMMAND $<TARGET_FILE:${ARG_TARGET}-gtest>)
@@ -88,12 +82,9 @@ function (blazingdb_artifact)
             COMMAND
                 ${CMAKE_BINARY_DIR}/${ARG_TARGET}-gtest
         )
-        add_dependencies (coverage ${ARG_TARGET}-gtest-run)
     endif ()
 
 endfunction ()
-
-link_directories($ENV{CONDA_PREFIX}/lib)
 
 blazingdb_artifact (
         TARGET

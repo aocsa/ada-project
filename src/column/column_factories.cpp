@@ -1,7 +1,7 @@
 #include <utecdf/column/column_factories.hpp>
 #include <utecdf/null_mask.hpp>
 #include <utecdf/utilities/traits.hpp>
-#include <utilities/error_utils.hpp>
+#include <utecdf/utilities/error_utils.hpp>
 
 namespace utecdf {
 

@@ -50,7 +50,7 @@ constexpr inline bool is_relationally_comparable() {
  *---------------------------------------------------------------------------**/
 template <typename T>
 constexpr inline bool is_numeric() {
-  return std::is_integral<T>::value or std::is_floating_point<T>::value;
+  return std::is_integral<T>::value || std::is_floating_point<T>::value;
 }
 
 /**---------------------------------------------------------------------------*
@@ -160,7 +160,7 @@ constexpr inline bool is_compound(data_type type) {
  * @return false `type` is a compound type
  *---------------------------------------------------------------------------**/
 constexpr inline bool is_simple(data_type type) {
-  return not is_compound(type);
+  return ! is_compound(type);
 }
 
 }  // namespace utecdf

@@ -66,3 +66,11 @@ cd build
 cmake ..
 make all
 ```
+
+Note
+
+```
+use cmake-gui
+cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+         -DVCPKG_TARGET_TRIPLET=x86-windows 
+```

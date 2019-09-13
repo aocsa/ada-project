@@ -3,7 +3,7 @@
 #include <utecdf/column/column.hpp>
 #include <utecdf/utecdf.hpp>
 
-#include <utilities/error_utils.hpp>
+#include <utecdf/utilities/error_utils.hpp>
 
 #include <memory>
 #include <type_traits>

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <utecdf/types.hpp>
-#include <utilities/error_utils.hpp>
 #include <cassert>
 /**---------------------------------------------------------------------------*
  * @file type_dispatcher.hpp
