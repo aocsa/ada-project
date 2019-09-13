@@ -11,8 +11,7 @@ elseif (DEFINED ENV{CONDA_PREFIX})
     set(PREFIX $ENV{CONDA_PREFIX})
     message(STATUS "Conda environment detected, CMAKE_SYSTEM_PREFIX_PATH set to: ${CMAKE_SYSTEM_PREFIX_PATH}")
 endif ()
-
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FeatureSummary)
 include(CheckIncludeFiles)
