@@ -76,10 +76,12 @@ function (blazingdb_artifact)
         add_executable (${ARG_TARGET}-gtest ${ARG_TESTS})
         target_include_directories (${ARG_TARGET} PUBLIC src)
         target_compile_options (${ARG_TARGET} PUBLIC -ggdb -O0)
-        target_link_libraries (${ARG_TARGET}-gtest ${ARG_TARGET}
+        target_link_libraries (${ARG_TARGET}-gtest 
+                ${ARG_TARGET}
                 GTest::GTest
                 $ENV{CONDA_PREFIX}/lib/libgmock_main.a
                 $ENV{CONDA_PREFIX}/lib/libgmock.a )
+
         add_custom_target (${ARG_TARGET}-gtest-run
                 COMMAND $<TARGET_FILE:${ARG_TARGET}-gtest>)
 
