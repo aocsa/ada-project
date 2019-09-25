@@ -117,9 +117,10 @@ blazingdb_artifact (
             src/column/column_factories.cpp
             src/table/table.cpp
             src/orderby/orderby.cpp
+            src/sample/two_sum.cpp
 
         TESTS
-            tests/column/column_test.cpp
+            tests/sample/two_sum.cpp
 )
 
 add_executable(utecdf_bin main.cpp)
