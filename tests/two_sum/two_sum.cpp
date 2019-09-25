@@ -3,7 +3,7 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <utecdf/sample/two_sum.hpp>
+#include <utec/two_sum/two_sum.hpp>
 #include <fmt/core.h>
 
 struct SumTwoTest : public ::testing::Test

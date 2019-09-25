@@ -1,4 +1,4 @@
-#include <utecdf/sample/two_sum.hpp>
+#include <utec/two_sum/two_sum.hpp>
 #include <vector>
 #include <map>
 #include <algorithm>

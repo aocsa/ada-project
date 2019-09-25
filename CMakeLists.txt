@@ -10,8 +10,11 @@ elseif (DEFINED ENV{CONDA_PREFIX})
     set(CMAKE_SYSTEM_PREFIX_PATH "$ENV{CONDA_PREFIX};${CMAKE_SYSTEM_PREFIX_PATH}")
     set(PREFIX $ENV{CONDA_PREFIX})
     message(STATUS "Conda environment detected, CMAKE_SYSTEM_PREFIX_PATH set to: ${CMAKE_SYSTEM_PREFIX_PATH}")
+
+    include_directories($ENV{CONDA_PREFIX}/include $ENV{PREFIX}/include)
+    link_directories($ENV{CONDA_PREFIX}/lib)
 endif ()
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 include(FeatureSummary)
 include(CheckIncludeFiles)
@@ -21,6 +24,7 @@ include(CTest)
 find_package(Threads)
 find_package(GTest REQUIRED)
 find_package(fmt REQUIRED)
+enable_testing ()
 
 if (GTEST_FOUND)
     enable_testing ()
@@ -93,36 +97,31 @@ function (blazingdb_artifact)
 
 endfunction ()
 
-link_directories($ENV{CONDA_PREFIX}/lib)
-
 blazingdb_artifact (
         TARGET
-            utecdf
+            utec_cs
 
         INCLUDES PUBLIC 
             $ENV{PROJECT_SOURCE_DIR}/include
             ${PROJECT_SOURCE_DIR}/include
-            
+            $ENV{CONDA_PREFIX}/include
+
         LIBRARIES
             fmt::fmt
 
         PREFIX
-            utecdf
+            utec
 
         PUBLIC_HEADERS
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/utecdf/
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/utec/
 
         SOURCES
-            src/column/column.cpp
-            src/column/column_factories.cpp
-            src/table/table.cpp
-            src/orderby/orderby.cpp
-            src/sample/two_sum.cpp
+            src/two_sum/two_sum.cpp
 
         TESTS
-            tests/sample/two_sum.cpp
+            tests/two_sum/two_sum.cpp
 )
 
-add_executable(utecdf_bin main.cpp)
-target_include_directories (utecdf_bin PUBLIC src)
-target_link_libraries (utecdf_bin utecdf)
+add_executable(utec_ada_main main.cpp)
+target_include_directories (utec_ada_main PUBLIC src)
+target_link_libraries (utec_ada_main utecdf)
