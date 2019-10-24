@@ -10,9 +10,6 @@ elseif (DEFINED ENV{CONDA_PREFIX})
     set(CMAKE_SYSTEM_PREFIX_PATH "$ENV{CONDA_PREFIX};${CMAKE_SYSTEM_PREFIX_PATH}")
     set(PREFIX $ENV{CONDA_PREFIX})
     message(STATUS "Conda environment detected, CMAKE_SYSTEM_PREFIX_PATH set to: ${CMAKE_SYSTEM_PREFIX_PATH}")
-
-    include_directories($ENV{CONDA_PREFIX}/include $ENV{PREFIX}/include)
-    link_directories($ENV{CONDA_PREFIX}/lib)
 endif ()
 set(CMAKE_CXX_STANDARD 14)
 
@@ -26,6 +23,10 @@ find_package(GTest REQUIRED)
 find_package(fmt REQUIRED)
 enable_testing ()
 
+include_directories($ENV{PROJECT_SOURCE_DIR}/include
+    $ENV{CONDA_PREFIX}/include $ENV{PREFIX}/include)
+link_directories($ENV{CONDA_PREFIX}/lib)
+
 if (GTEST_FOUND)
     enable_testing ()
     add_custom_target (coverage
@@ -35,76 +36,76 @@ if (GTEST_FOUND)
 endif ()
 
 function (blazingdb_artifact)
-    set (OPTIONS OPTIONAL VIRTUAL)
-    set (ONE_VALUE_ARGS PREFIX TARGET)
-    set (MULTI_VALUE_ARGS SOURCES INCLUDES LIBRARIES PUBLIC_HEADERS TESTS)
-    cmake_parse_arguments (ARG "${OPTIONS}" "${ONE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    if (ARG_UNPARSED_ARGUMENTS)
-        message (SEND_ERROR
-                "Error: unrecognized arguments: ${ARG_UNPARSED_ARGUMENTS}")
-    endif ()
+  set (OPTIONS OPTIONAL VIRTUAL)
+  set (ONE_VALUE_ARGS PREFIX TARGET)
+  set (MULTI_VALUE_ARGS SOURCES INCLUDES LIBRARIES PUBLIC_HEADERS TESTS)
+  cmake_parse_arguments (ARG "${OPTIONS}" "${ONE_VALUE_ARGS}"
+    "${MULTI_VALUE_ARGS}" ${ARGN})
+  if (ARG_UNPARSED_ARGUMENTS)
+    message (SEND_ERROR
+      "Error: unrecognized arguments: ${ARG_UNPARSED_ARGUMENTS}")
+  endif ()
 
-    if (${ARG_VIRTUAL})
-        set (TYPE OBJECT)
-    endif ()
+  if (${ARG_VIRTUAL})
+    set (TYPE OBJECT)
+  endif ()
 
-
-    if (ARG_PUBLIC_HEADERS)
-        message (STATUS "Log: public headers ${ARG_PUBLIC_HEADERS}")
-        install(DIRECTORY ${ARG_PUBLIC_HEADERS} DESTINATION include)
-    endif ()
-
+  if (ARG_SOURCES)
     add_library (${ARG_TARGET} ${TYPE} ${ARG_SOURCES})
+  endif()
 
-    if (ARG_LIBRARIES)
-        target_link_libraries (${ARG_TARGET} ${ARG_LIBRARIES})
-    endif ()
+  if (ARG_LIBRARIES)
+    target_link_libraries (${ARG_TARGET} ${ARG_LIBRARIES})
+  endif ()
 
-    if (ARG_INCLUDES)
-        target_include_directories (${ARG_TARGET} ${ARG_INCLUDES})
-    endif ()
+  if (ARG_INCLUDES)
+    target_include_directories (${ARG_TARGET} ${ARG_INCLUDES})
+  endif ()
 
-    if (NOT ARG_PREFIX)
-        set (ARG_PREFIX "")
-    endif ()
+  if (ARG_LIBRARY_PATHS)
+    target_link_libraries (${ARG_TARGET} ${ARG_LIBRARY_PATHS})
+  endif ()
 
-    install (TARGETS ${ARG_TARGET}
-            LIBRARY DESTINATION lib
-            ARCHIVE DESTINATION lib)
+  if (NOT ARG_PREFIX)
+    set (ARG_PREFIX "")
+  endif ()
 
+  install (TARGETS ${ARG_TARGET}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
 
-    if (GTEST_FOUND AND ARG_TESTS)
-       message (STATUS "Log: unit test ${ARG_TARGET}-gtest")
+  if (ARG_PUBLIC_HEADERS)
+    message (STATUS "Log: public headers ${ARG_PUBLIC_HEADERS}")
+    install(DIRECTORY ${ARG_PUBLIC_HEADERS} DESTINATION include)
+  endif ()
 
-        add_executable (${ARG_TARGET}-gtest ${ARG_TESTS})
-        target_include_directories (${ARG_TARGET} PUBLIC src)
-        target_compile_options (${ARG_TARGET} PUBLIC -ggdb -O0)
-        target_link_libraries (${ARG_TARGET}-gtest 
-                ${ARG_TARGET}
-                GTest::GTest
-                $ENV{CONDA_PREFIX}/lib/libgmock_main.a
-                $ENV{CONDA_PREFIX}/lib/libgmock.a )
-
-        add_custom_target (${ARG_TARGET}-gtest-run
-                COMMAND $<TARGET_FILE:${ARG_TARGET}-gtest>)
-
-        add_test(NAME ${ARG_TARGET}-gtest
-            COMMAND
-                ${CMAKE_BINARY_DIR}/${ARG_TARGET}-gtest
-        )
-        add_dependencies (coverage ${ARG_TARGET}-gtest-run)
-    endif ()
-
+  if (GTEST_FOUND AND ARG_TESTS)
+    message (STATUS "Log: unit test ${ARG_TARGET}-gtest")
+    add_executable (${ARG_TARGET}-gtest EXCLUDE_FROM_ALL ${ARG_TESTS})
+    target_include_directories (${ARG_TARGET} PUBLIC src)
+    target_compile_options (${ARG_TARGET} PUBLIC -ggdb -O0)
+    target_link_libraries (${ARG_TARGET}-gtest 
+        ${ARG_TARGET}
+        GTest::GTest
+        $ENV{CONDA_PREFIX}/lib/libgmock_main.a
+        $ENV{CONDA_PREFIX}/lib/libgmock.a )
+        
+    add_custom_target (${ARG_TARGET}-gtest-run
+    COMMAND $<TARGET_FILE:${ARG_TARGET}-gtest>)
+    add_dependencies (coverage ${ARG_TARGET}-gtest-run)
+  endif ()
 endfunction ()
+
 
 blazingdb_artifact (
         TARGET
             utec_cs
 
         INCLUDES PUBLIC 
-            $ENV{PROJECT_SOURCE_DIR}/include
-            ${PROJECT_SOURCE_DIR}/include
             $ENV{CONDA_PREFIX}/include
+
+        PUBLIC_HEADERS
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/utec
 
         LIBRARIES
             fmt::fmt
@@ -112,16 +113,9 @@ blazingdb_artifact (
         PREFIX
             utec
 
-        PUBLIC_HEADERS
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/utec/
-
         SOURCES
-            src/two_sum/two_sum.cpp
+            src/utec/pagemanager.cpp
 
         TESTS
-            tests/two_sum/two_sum.cpp
+            tests/utec/btree_test.cpp
 )
-
-add_executable(utec_ada_main main.cpp)
-target_include_directories (utec_ada_main PUBLIC src)
-target_link_libraries (utec_ada_main utecdf)
