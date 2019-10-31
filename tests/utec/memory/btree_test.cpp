@@ -3,14 +3,16 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <utec/btree.h>
+#include <utec/memory/btree.h>
 #include <fmt/core.h>
 
-struct SumTwoTest : public ::testing::Test
+struct MemoryBasedBtree : public ::testing::Test
 {
 };
 
-TEST_F(SumTwoTest, TestA) {
+TEST_F(MemoryBasedBtree, TestA) {
+    using namespace utec::memory;
+    
     btree<int> bt;
     std::string values = "zxcnmvafjdaqpirue";
     for(auto c : values) {
@@ -19,4 +21,5 @@ TEST_F(SumTwoTest, TestA) {
     }
     bt.print();
 }
+ 
  

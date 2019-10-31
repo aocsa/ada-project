@@ -23,8 +23,12 @@ find_package(GTest REQUIRED)
 find_package(fmt REQUIRED)
 enable_testing ()
 
-include_directories($ENV{PROJECT_SOURCE_DIR}/include
-    $ENV{CONDA_PREFIX}/include $ENV{PREFIX}/include)
+include_directories(
+    $ENV{PROJECT_SOURCE_DIR}/include
+    $ENV{CONDA_PREFIX}/include 
+    $ENV{PREFIX}/include
+)
+
 link_directories($ENV{CONDA_PREFIX}/lib)
 
 if (GTEST_FOUND)
@@ -81,7 +85,7 @@ function (blazingdb_artifact)
 
   if (GTEST_FOUND AND ARG_TESTS)
     message (STATUS "Log: unit test ${ARG_TARGET}-gtest")
-    add_executable (${ARG_TARGET}-gtest EXCLUDE_FROM_ALL ${ARG_TESTS})
+    add_executable (${ARG_TARGET}-gtest ${ARG_TESTS})
     target_include_directories (${ARG_TARGET} PUBLIC src)
     target_compile_options (${ARG_TARGET} PUBLIC -ggdb -O0)
     target_link_libraries (${ARG_TARGET}-gtest 
@@ -90,8 +94,10 @@ function (blazingdb_artifact)
         $ENV{CONDA_PREFIX}/lib/libgmock_main.a
         $ENV{CONDA_PREFIX}/lib/libgmock.a )
         
-    add_custom_target (${ARG_TARGET}-gtest-run
-    COMMAND $<TARGET_FILE:${ARG_TARGET}-gtest>)
+    add_custom_target (${ARG_TARGET}-gtest-run COMMAND $<TARGET_FILE:${ARG_TARGET}-gtest>)
+
+    add_test(NAME ${ARG_TARGET}-gtest COMMAND ${CMAKE_BINARY_DIR}/${ARG_TARGET}-gtest)
+
     add_dependencies (coverage ${ARG_TARGET}-gtest-run)
   endif ()
 endfunction ()
@@ -99,7 +105,7 @@ endfunction ()
 
 blazingdb_artifact (
         TARGET
-            utec_cs
+            btree
 
         INCLUDES PUBLIC 
             $ENV{CONDA_PREFIX}/include
@@ -114,8 +120,10 @@ blazingdb_artifact (
             utec
 
         SOURCES
-            src/utec/pagemanager.cpp
+            src/utec/disk/pagemanager.cpp
 
         TESTS
-            tests/utec/btree_test.cpp
+            tests/utec/memory/btree_test.cpp
+            tests/utec/disk/btree_test.cpp
+
 )
